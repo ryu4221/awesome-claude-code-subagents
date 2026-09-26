@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>会社案内 三つ折りポスター</title>
+<!--
+  A4 横（297 × 210mm）・巻き三つ折り（2 箇所の縦折り）
+  ・1 ページ目 = 外面：[内折りフラップ 97mm][裏表紙 100mm][表紙 100mm]
+  ・2 ページ目 = 中面：[左 100mm][中央 100mm][右 97mm]
+  両面印刷時は「短辺とじ」で印刷してください。
+  〔 〕内・サンプル文言を自社の内容に差し替えて使用します。
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Outfit:wght@300;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #14161f;
+    --ink-soft: #4a4f5e;
+    --paper: #f6f3ee;
+    --card: #ffffff;
+    --accent: #ff5a36;
+    --accent-2: #ffb13b;
+    --accent-3: #6c63ff;
+    --line: #dcd6cc;
+    --flap: 97mm;
+    --panel: 100mm;
+  }
+  @page { size: A4 landscape; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    background: #d9d6d0;
+    font-family: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", "IPAGothic", sans-serif;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+  .en { font-family: "Outfit", "Helvetica Neue", Arial, sans-serif; letter-spacing: .02em; }
+
+  /* ---------- sheet ---------- */
+  .sheet {
+    width: 297mm; height: 210mm;
+    margin: 12mm auto;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    background: var(--paper);
+    box-shadow: 0 6px 30px rgba(0,0,0,.18);
+    page-break-after: always;
+    break-after: page;
+  }
+  .sheet:last-child { page-break-after: auto; break-after: auto; }
+  .panel { position: relative; height: 100%; padding: 14mm 11mm 12mm; overflow: hidden; }
+  .w-flap { width: var(--flap); }
+  .w-panel { width: var(--panel); }
+
+  /* fold guides: dashed on screen, small ticks when printed */
+  .fold {
+    position: absolute; top: 0; bottom: 0; width: 0;
+    border-left: 1px dashed rgba(20,22,31,.28);
+    z-index: 10; pointer-events: none;
+  }
+  .fold::before, .fold::after {
+    content: ""; position: absolute; left: -.5px; width: 1px; height: 4mm; background: var(--ink);
+  }
+  .fold::before { top: 0; } .fold::after { bottom: 0; }
+  @media print {
+    body { background: none; }
+    .sheet { margin: 0; box-shadow: none; }
+    .fold { border-left-color: transparent; }
+  }
+
+  /* ---------- shared parts ---------- */
+  .eyebrow {
+    font-family: "Outfit", sans-serif; font-weight: 700; font-size: 8pt;
+    letter-spacing: .28em; text-transform: uppercase; color: var(--accent);
+    display: flex; align-items: center; gap: 2.5mm;
+  }
+  .eyebrow::before { content: ""; width: 7mm; height: 1.4px; background: currentColor; }
+  h2 { font-size: 17pt; font-weight: 900; line-height: 1.35; margin: 3mm 0 5mm; letter-spacing: .02em; }
+  p { font-size: 8.4pt; color: var(--ink-soft); }
+  .blob { position: absolute; border-radius: 50%; filter: blur(0.5mm); }
+
+  /* ---------- COVER ---------- */
+  .cover { background: var(--ink); color: #fff; display: flex; flex-direction: column; }
+  .cover .blob.b1 { width: 92mm; height: 92mm; right: -30mm; top: 38mm;
+    background: radial-gradient(circle at 30% 30%, var(--accent-2), var(--accent) 60%, transparent 72%); opacity: .95; }
+  .cover .blob.b2 { width: 58mm; height: 58mm; left: -22mm; bottom: 18mm;
+    background: radial-gradient(circle at 60% 40%, var(--accent-3), transparent 70%); opacity: .75; }
+  .cover .ring { position: absolute; width: 70mm; height: 70mm; right: -14mm; top: 50mm;
+    border: 1px solid rgba(255,255,255,.35); border-radius: 50%; }
+  .logo { display: flex; align-items: center; gap: 2.5mm; position: relative; z-index: 2; }
+  .logo-mark { width: 8mm; height: 8mm; border-radius: 2.2mm;
+    background: linear-gradient(135deg, var(--accent-2), var(--accent)); position: relative; }
+  .logo-mark::after { content: ""; position: absolute; inset: 2.2mm; border-radius: 50%; background: var(--ink); }
+  .logo-text { font-family: "Outfit", sans-serif; font-weight: 800; font-size: 11pt; letter-spacing: .12em; }
+  .cover .vertical {
+    position: absolute; right: 7mm; top: 16mm; writing-mode: vertical-rl;
+    font-family: "Outfit", sans-serif; font-size: 6.5pt; letter-spacing: .4em; opacity: .6; z-index: 2;
+  }
+  .cover-title { margin-top: auto; position: relative; z-index: 2; }
+  .cover-title .big { font-family: "Outfit", sans-serif; font-weight: 800; font-size: 40pt; line-height: .95; letter-spacing: -.01em; }
+  .cover-title .big span { color: transparent; -webkit-text-stroke: 1px #fff; }
+  .cover-title .jp { font-size: 12pt; font-weight: 700; margin-top: 6mm; letter-spacing: .08em; }
+  .cover-title .sub { font-size: 7.5pt; opacity: .7; margin-top: 2mm; letter-spacing: .1em; }
+  .cover-foot { margin-top: 10mm; display: flex; justify-content: space-between; align-items: flex-end;
+    font-family: "Outfit", sans-serif; font-size: 6.5pt; letter-spacing: .2em; opacity: .75; position: relative; z-index: 2; }
+
+  /* ---------- BACK (contact) ---------- */
+  .back { background: var(--paper); display: flex; flex-direction: column; }
+  .back .map {
+    height: 52mm; border-radius: 4mm; margin: 2mm 0 6mm; position: relative; overflow: hidden;
+    background:
+      linear-gradient(0deg, transparent 48%, #e7e1d7 48%, #e7e1d7 52%, transparent 52%),
+      linear-gradient(90deg, transparent 30%, #e7e1d7 30%, #e7e1d7 34%, transparent 34%),
+      linear-gradient(35deg, transparent 60%, #ece6dc 60%, #ece6dc 63%, transparent 63%),
+      #fff;
+    border: 1px solid var(--line);
+  }
+  .map .pin { position: absolute; left: 52%; top: 30%; width: 7mm; height: 7mm; border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg); background: var(--accent); box-shadow: 0 2mm 4mm rgba(255,90,54,.35); }
+  .map .pin::after { content: ""; position: absolute; inset: 2mm; border-radius: 50%; background: #fff; }
+  .map .label { position: absolute; left: 4mm; bottom: 3mm; font-size: 6.5pt; color: var(--ink-soft); }
+  dl.info { display: grid; grid-template-columns: 17mm 1fr; row-gap: 2.2mm; font-size: 7.8pt; }
+  dl.info dt { font-family: "Outfit", sans-serif; font-weight: 700; font-size: 6.5pt; letter-spacing: .18em; color: var(--accent); padding-top: .6mm; }
+  dl.info dd { color: var(--ink); }
+  .back-foot { margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 5mm; }
+  .qr { width: 22mm; height: 22mm; border-radius: 2mm; background: #fff; border: 1px solid var(--line);
+    display: grid; place-items: center; font-size: 6pt; color: var(--ink-soft); text-align: center; line-height: 1.3; }
+  .sns { display: flex; gap: 2mm; margin-top: 2mm; }
+  .sns span { width: 7mm; height: 7mm; border-radius: 50%; border: 1px solid var(--ink); display: grid; place-items: center;
+    font-family: "Outfit", sans-serif; font-size: 5.5pt; font-weight: 700; }
+  .copy { font-family: "Outfit", sans-serif; font-size: 5.5pt; color: var(--ink-soft); letter-spacing: .12em; margin-top: 3mm; }
+
+  /* ---------- FLAP (numbers) ---------- */
+  .flap { background: linear-gradient(160deg, var(--accent) 0%, #ff7a45 55%, var(--accent-2) 100%); color: #fff; display: flex; flex-direction: column; }
+  .flap .eyebrow { color: #fff; }
+  .flap h2 { color: #fff; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+  .stat { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); border-radius: 3.5mm; padding: 4mm 3.5mm; backdrop-filter: blur(2px); }
+  .stat .num { font-family: "Outfit", sans-serif; font-weight: 800; font-size: 22pt; line-height: 1; }
+  .stat .num small { font-size: 9pt; font-weight: 500; margin-left: .8mm; }
+  .stat .lbl { font-size: 7pt; margin-top: 2mm; opacity: .95; }
+  .stat.wide { grid-column: span 2; display: flex; align-items: center; justify-content: space-between; }
+  .flap .quote { margin-top: auto; font-size: 10.5pt; font-weight: 700; line-height: 1.6; }
+  .flap .quote::before { content: "“"; display: block; font-family: "Outfit", sans-serif; font-size: 34pt; line-height: .6; opacity: .6; }
+  .flap .quote small { display: block; font-size: 7pt; font-weight: 500; margin-top: 2mm; opacity: .85; }
+
+  /* ---------- INSIDE ---------- */
+  .about { background: var(--card); }
+  .about .big-num { position: absolute; right: -4mm; bottom: -14mm; font-family: "Outfit", sans-serif; font-weight: 800;
+    font-size: 110pt; line-height: 1; color: transparent; -webkit-text-stroke: 1px #e9e3d9; }
+  .about .lead { font-size: 9.5pt; color: var(--ink); font-weight: 500; margin-bottom: 4mm; }
+  .values { margin-top: 7mm; display: grid; gap: 3.5mm; position: relative; z-index: 2; }
+  .value { display: grid; grid-template-columns: 10mm 1fr; gap: 3mm; align-items: start; }
+  .value .idx { font-family: "Outfit", sans-serif; font-weight: 800; font-size: 13pt; color: var(--accent); line-height: 1.2; }
+  .value h3 { font-size: 9.5pt; font-weight: 700; }
+  .value p { font-size: 7.6pt; }
+  .photo {
+    height: 36mm; border-radius: 4mm; margin-top: 6mm; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #2b2f45, #14161f);
+    display: grid; place-items: center; color: rgba(255,255,255,.6); font-size: 7pt; letter-spacing: .1em;
+  }
+  .photo::before { content: ""; position: absolute; width: 40mm; height: 40mm; border-radius: 50%; right: -10mm; top: -14mm;
+    background: radial-gradient(circle, var(--accent-3), transparent 70%); opacity: .8; }
+
+  .services { background: var(--paper); }
+  .service-list { display: grid; gap: 4mm; }
+  .service { background: var(--card); border-radius: 4mm; padding: 4.5mm 4.5mm 4mm; border: 1px solid var(--line); position: relative; }
+  .service .ico { width: 9mm; height: 9mm; border-radius: 2.5mm; display: grid; place-items: center; margin-bottom: 2.5mm; }
+  .service .ico svg { width: 5mm; height: 5mm; }
+  .service:nth-child(1) .ico { background: #ffe6df; color: var(--accent); }
+  .service:nth-child(2) .ico { background: #fff1d9; color: #e08a00; }
+  .service:nth-child(3) .ico { background: #e9e7ff; color: var(--accent-3); }
+  .service .tag { position: absolute; right: 4.5mm; top: 4.5mm; font-family: "Outfit", sans-serif; font-size: 6pt; font-weight: 700;
+    letter-spacing: .2em; color: var(--ink-soft); }
+  .service h3 { font-size: 10pt; font-weight: 700; line-height: 1.4; }
+  .service h3 .en { display: block; font-size: 6.5pt; font-weight: 500; color: var(--ink-soft); letter-spacing: .15em; }
+  .service p { font-size: 7.4pt; margin-top: 1.5mm; }
+
+  .vision { background: var(--ink); color: #fff; display: flex; flex-direction: column; }
+  .vision .eyebrow { color: var(--accent-2); }
+  .vision h2 { color: #fff; }
+  .vision p { color: rgba(255,255,255,.72); }
+  .vision .blob.b3 { width: 80mm; height: 80mm; right: -36mm; top: -26mm;
+    background: radial-gradient(circle, var(--accent), transparent 68%); opacity: .55; }
+  .timeline { margin-top: 6mm; position: relative; padding-left: 5mm; border-left: 1px solid rgba(255,255,255,.25); display: grid; gap: 3.5mm; }
+  .timeline li { list-style: none; position: relative; }
+  .timeline li::before { content: ""; position: absolute; left: -6.6mm; top: 1.6mm; width: 2.4mm; height: 2.4mm; border-radius: 50%;
+    background: var(--accent-2); box-shadow: 0 0 0 1mm rgba(255,177,59,.2); }
+  .timeline .yr { font-family: "Outfit", sans-serif; font-weight: 700; font-size: 8pt; color: var(--accent-2); letter-spacing: .1em; }
+  .timeline .tx { font-size: 7.6pt; color: rgba(255,255,255,.85); }
+  .cta { margin-top: auto; border-radius: 4mm; padding: 5mm; background: linear-gradient(135deg, var(--accent), var(--accent-2)); position: relative; z-index: 2; }
+  .cta .en { font-weight: 800; font-size: 14pt; line-height: 1.1; }
+  .cta p { color: #fff; font-size: 7.4pt; margin-top: 1.5mm; }
+  .cta .btn { display: inline-flex; align-items: center; gap: 2mm; margin-top: 3mm; background: var(--ink); color: #fff;
+    font-size: 7pt; font-weight: 700; padding: 1.8mm 4mm; border-radius: 99px; letter-spacing: .05em; }
+</style>
+</head>
+<body>
+
+<!-- ================= PAGE 1 : 外面 ================= -->
+<section class="sheet" aria-label="外面">
+  <!-- 内折りフラップ（中面に折り込まれる面） -->
+  <div class="panel w-flap flap">
+    <div class="eyebrow">Numbers</div>
+    <h2>数字で見る<br>〔会社名〕</h2>
+    <div class="stats">
+      <div class="stat"><div class="num en">15<small>年</small></div><div class="lbl">創業からの歩み</div></div>
+      <div class="stat"><div class="num en">120<small>名</small></div><div class="lbl">社員数</div></div>
+      <div class="stat"><div class="num en">98<small>%</small></div><div class="lbl">顧客継続率</div></div>
+      <div class="stat"><div class="num en">500<small>+</small></div><div class="lbl">導入実績</div></div>
+      <div class="stat wide"><div class="lbl" style="margin:0">平均年齢</div><div class="num en">32.4<small>歳</small></div></div>
+    </div>
+    <p class="quote">
+      小さなチームで、<br>大きな変化をつくる。
+      <small>— 〔代表取締役 氏名〕</small>
+    </p>
+  </div>
+
+  <!-- 裏表紙：会社情報 -->
+  <div class="panel w-panel back">
+    <div class="eyebrow">Contact &amp; Access</div>
+    <h2>お気軽に<br>ご相談ください。</h2>
+    <div class="map">
+      <div class="pin"></div>
+      <div class="label">〔地図 / 写真に差し替え〕</div>
+    </div>
+    <dl class="info">
+      <dt>COMPANY</dt><dd>株式会社〔会社名〕</dd>
+      <dt>ADDRESS</dt><dd>〒000-0000<br>〔東京都〇〇区〇〇 1-2-3 〇〇ビル 5F〕</dd>
+      <dt>TEL</dt><dd class="en">00-0000-0000</dd>
+      <dt>MAIL</dt><dd class="en">info@example.co.jp</dd>
+      <dt>WEB</dt><dd class="en">www.example.co.jp</dd>
+    </dl>
+    <div class="back-foot">
+      <div>
+        <div class="sns"><span>X</span><span>IG</span><span>in</span><span>YT</span></div>
+        <div class="copy">© 2026 YOUR COMPANY INC.</div>
+      </div>
+      <div class="qr">QR<br>CODE</div>
+    </div>
+  </div>
+
+  <!-- 表紙 -->
+  <div class="panel w-panel cover">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="ring"></div>
+    <div class="logo"><div class="logo-mark"></div><div class="logo-text">YOUR&nbsp;CO.</div></div>
+    <div class="vertical">COMPANY PROFILE 2026</div>
+    <div class="cover-title">
+      <div class="big">Design<br><span>the</span><br>Future.</div>
+      <div class="jp">未来を、デザインする。</div>
+      <div class="sub">〔キャッチコピーのサブテキストをここに〕</div>
+    </div>
+    <div class="cover-foot"><span>COMPANY PROFILE</span><span>VOL.01</span></div>
+  </div>
+
+  <div class="fold" style="left: 97mm"></div>
+  <div class="fold" style="left: 197mm"></div>
+</section>
+
+<!-- ================= PAGE 2 : 中面 ================= -->
+<section class="sheet" aria-label="中面">
+  <!-- 左：About -->
+  <div class="panel w-panel about">
+    <div class="big-num">01</div>
+    <div class="eyebrow">About Us</div>
+    <h2>テクノロジーと<br>デザインで、<br>毎日をもっと軽やかに。</h2>
+    <p class="lead">私たち〔会社名〕は、〔事業領域〕を通じて人と企業の可能性を広げる会社です。</p>
+    <p>〔会社紹介文：創業の想い、どんな課題を解決しているか、どんなお客様に選ばれているかを 2〜3 文で。〕</p>
+    <div class="values">
+      <div class="value"><div class="idx en">01</div><div><h3>ユーザー起点</h3><p>使う人の体験から、すべてを考えます。</p></div></div>
+      <div class="value"><div class="idx en">02</div><div><h3>スピードと誠実さ</h3><p>速く動き、約束は必ず守ります。</p></div></div>
+      <div class="value"><div class="idx en">03</div><div><h3>挑戦を楽しむ</h3><p>変化を恐れず、学び続けるチームです。</p></div></div>
+    </div>
+    <div class="photo">〔 オフィス / チーム写真 〕</div>
+  </div>
+
+  <!-- 中央：Services -->
+  <div class="panel w-panel services">
+    <div class="eyebrow">Our Services</div>
+    <h2>私たちに<br>できること。</h2>
+    <div class="service-list">
+      <div class="service">
+        <span class="tag">01</span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></div>
+        <h3><span class="en">DIGITAL PRODUCT</span>〔サービス名 A〕</h3>
+        <p>〔サービスの概要を 1〜2 行で。お客様が得られる価値を中心に。〕</p>
+      </div>
+      <div class="service">
+        <span class="tag">02</span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5L12 16.5 5.5 21l2-7.5L2 9h7z"/></svg></div>
+        <h3><span class="en">BRANDING</span>〔サービス名 B〕</h3>
+        <p>〔サービスの概要を 1〜2 行で。お客様が得られる価値を中心に。〕</p>
+      </div>
+      <div class="service">
+        <span class="tag">03</span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></div>
+        <h3><span class="en">CONSULTING</span>〔サービス名 C〕</h3>
+        <p>〔サービスの概要を 1〜2 行で。お客様が得られる価値を中心に。〕</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右：Vision / Recruit -->
+  <div class="panel w-flap vision">
+    <div class="blob b3"></div>
+    <div class="eyebrow">Vision</div>
+    <h2>次の10年へ。</h2>
+    <p>〔ビジョン・今後の展望を 2〜3 文で。会社がめざす社会や未来像を語ります。〕</p>
+    <ul class="timeline">
+      <li><div class="yr">2011</div><div class="tx">〔会社名〕設立</div></li>
+      <li><div class="yr">2018</div><div class="tx">〔主力サービス〕リリース</div></li>
+      <li><div class="yr">2023</div><div class="tx">〔海外拠点〕開設</div></li>
+      <li><div class="yr">2026 —</div><div class="tx">〔次の挑戦〕</div></li>
+    </ul>
+    <div class="cta">
+      <div class="en">We're<br>Hiring!</div>
+      <p>一緒に未来をつくる仲間を募集しています。</p>
+      <span class="btn">採用情報を見る →</span>
+    </div>
+  </div>
+
+  <div class="fold" style="left: 100mm"></div>
+  <div class="fold" style="left: 200mm"></div>
+</section>
+
+</body>
+</html>
